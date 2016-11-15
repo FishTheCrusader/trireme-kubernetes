@@ -5,12 +5,12 @@ import (
 
 	"github.com/aporeto-inc/kubepox"
 
-	"k8s.io/kubernetes/pkg/api"
-	"k8s.io/kubernetes/pkg/apis/extensions"
-	client "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
-	"k8s.io/kubernetes/pkg/client/restclient"
-	"k8s.io/kubernetes/pkg/client/unversioned/clientcmd"
-	"k8s.io/kubernetes/pkg/fields"
+	client "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/pkg/api"
+	"k8s.io/client-go/pkg/apis/extensions"
+	"k8s.io/client-go/pkg/fields"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 // Client is the Trireme representation of the Client.
@@ -33,11 +33,11 @@ func NewClient(kubeconfig string, namespace string, nodename string) (*Client, e
 // InitKubernetesClient Initialize the Kubernetes client
 func (c *Client) InitKubernetesClient(kubeconfig string) error {
 
-	var config *restclient.Config
+	var config *rest.Config
 	var err error
 
 	if kubeconfig == "" {
-		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+		config, err = rest.InClusterConfig()
 		if err != nil {
 			return fmt.Errorf("Error Building InCluster config: %v", err)
 		}

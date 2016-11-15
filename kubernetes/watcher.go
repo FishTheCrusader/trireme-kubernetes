@@ -5,8 +5,8 @@ import (
 
 	"github.com/golang/glog"
 
-	"k8s.io/kubernetes/pkg/api"
-	"k8s.io/kubernetes/pkg/watch"
+	"k8s.io/client-go/pkg/api"
+	"k8s.io/client-go/pkg/watch"
 )
 
 // PolicyWatcher iterates over the networkPolicyEvents. Each event generates a call to the parameter function.
