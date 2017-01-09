@@ -73,6 +73,28 @@ func (c *Client) CreateLocalPodController(namespace string,
 		})
 }
 
+// CreatePodController creates a controller specifically for Pods.
+func (c *Client) CreatePodController(namespace string,
+	addFunc func(addedApiStruct *api.Pod) error, deleteFunc func(deletedApiStruct *api.Pod) error, updateFunc func(oldApiStruct, updatedApiStruct *api.Pod) error) (cache.Store, *cache.Controller) {
+
+	return CreateResourceController(c.KubeClient().Core().RESTClient(), "pods", namespace, &api.Pod{}, fields.Everything(),
+		func(addedApiStruct interface{}) {
+			if err := addFunc(addedApiStruct.(*api.Pod)); err != nil {
+				glog.V(errorLogLevel).Infof("Error while handling Add Pod: %s ", err)
+			}
+		},
+		func(deletedApiStruct interface{}) {
+			if err := deleteFunc(deletedApiStruct.(*api.Pod)); err != nil {
+				glog.V(errorLogLevel).Infof("Error while handling Delete Pod: %s ", err)
+			}
+		},
+		func(oldApiStruct, updatedApiStruct interface{}) {
+			if err := updateFunc(oldApiStruct.(*api.Pod), updatedApiStruct.(*api.Pod)); err != nil {
+				glog.V(errorLogLevel).Infof("Error while handling Update Pod: %s ", err)
+			}
+		})
+}
+
 // CreateNetworkPoliciesController creates a controller specifically for NetworkPolicies.
 func (c *Client) CreateNetworkPoliciesController(namespace string,
 	addFunc func(addedApiStruct *extensions.NetworkPolicy) error, deleteFunc func(deletedApiStruct *extensions.NetworkPolicy) error, updateFunc func(oldApiStruct, updatedApiStruct *extensions.NetworkPolicy) error) (cache.Store, *cache.Controller) {
