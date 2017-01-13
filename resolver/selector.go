@@ -6,11 +6,11 @@ import (
 	"github.com/aporeto-inc/trireme/policy"
 	"github.com/golang/glog"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/selection"
 	"k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/apis/extensions"
-	metav1 "k8s.io/kubernetes/pkg/apis/meta/v1"
-	"k8s.io/kubernetes/pkg/labels"
-	"k8s.io/kubernetes/pkg/selection"
 )
 
 func clauseEquals(requirement labels.Requirement) []policy.KeyValueOperator {
